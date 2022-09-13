@@ -9,6 +9,10 @@ export default {
             newTodo: '',
             hideCompleted: false,
             todos: [],
+            circleStyles: 'rounded-circle d-inline-block ml-2 mb-1',
+            success: true,
+            danger: false,
+            count: 0
         }
     },
     computed: {
@@ -16,15 +20,30 @@ export default {
         return this.hideCompleted
             ? this.todos.filter((t) => !t.done)
             : this.todos
-    }
+        },
+        changeColor() {
+            if (this.todos.length >= 5) {
+                this.success = false;
+                this.danger = true;
+            } else if(this.todos.length < 5) {
+                this.success = true;
+                this.danger = false;
+            }
+        }
     },
     methods: {
         addTodo() {
-            this.todos.push({id: id++, text: this.newTodo, done: false});
+            if (this.newTodo) {
+                this.todos.push({id: id++, text: this.newTodo, done: false});
+            }
+
+            this.changeColor;
+            
             this.newTodo = '';
         },
         removeTodo(todo) {
             this.todos = this.todos.filter(t => t !== todo)
+            this.changeColor;
         }
     }
 }
@@ -33,7 +52,8 @@ export default {
 <template>
 
     <form class="secondary" @submit.prevent="addTodo">
-        <h3>Todo List</h3>
+        <h3 class="d-inline-block">Todo List</h3>
+        <div id="circle" style="width: 10px; height: 10px" :class="[{ 'bg-success': success, 'bg-danger': danger }, circleStyles]"></div>
         <div class="form-group p-2">
             <input id="addTodo" class="form-control col-md-6 d-inline-block mr-3 align-self-center" v-model="newTodo">
             <button style="height: 2.4rem" class="btn btn-success col-md-3 mb-1">Add Todo</button>

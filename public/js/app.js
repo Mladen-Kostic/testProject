@@ -19484,7 +19484,11 @@ var id = 0;
     return {
       newTodo: '',
       hideCompleted: false,
-      todos: []
+      todos: [],
+      circleStyles: 'rounded-circle d-inline-block ml-2 mb-1',
+      success: true,
+      danger: false,
+      count: 0
     };
   },
   computed: {
@@ -19492,21 +19496,35 @@ var id = 0;
       return this.hideCompleted ? this.todos.filter(function (t) {
         return !t.done;
       }) : this.todos;
+    },
+    changeColor: function changeColor() {
+      if (this.todos.length >= 5) {
+        this.success = false;
+        this.danger = true;
+      } else if (this.todos.length < 5) {
+        this.success = true;
+        this.danger = false;
+      }
     }
   },
   methods: {
     addTodo: function addTodo() {
-      this.todos.push({
-        id: id++,
-        text: this.newTodo,
-        done: false
-      });
+      if (this.newTodo) {
+        this.todos.push({
+          id: id++,
+          text: this.newTodo,
+          done: false
+        });
+      }
+
+      this.changeColor;
       this.newTodo = '';
     },
     removeTodo: function removeTodo(todo) {
       this.todos = this.todos.filter(function (t) {
         return t !== todo;
       });
+      this.changeColor;
     }
   }
 });
@@ -19527,7 +19545,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 
-var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Todo List", -1
+var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
+  "class": "d-inline-block"
+}, "Todo List", -1
 /* HOISTED */
 );
 
@@ -19567,7 +19587,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onSubmit: _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $options.addTodo && $options.addTodo.apply($options, arguments);
     }, ["prevent"]))
-  }, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    id: "circle",
+    style: {
+      "width": "10px",
+      "height": "10px"
+    },
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
+      'bg-success': $data.success,
+      'bg-danger': $data.danger
+    }, $data.circleStyles])
+  }, null, 2
+  /* CLASS */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     id: "addTodo",
     "class": "form-control col-md-6 d-inline-block mr-3 align-self-center",
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
